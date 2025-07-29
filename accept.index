@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceptance Letter - ICCA</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      max-width: 720px;
+      width: 90%;
+      padding: 60px 50px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      text-align: left;
+      border: 1px solid #dce3ea;
+    }
+
+    h1 {
+      color: #1f2e4c;
+      font-size: 28px;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    .highlight {
+      color: #004085;
+      font-weight: bold;
+    }
+
+    p {
+      color: #2b2b2b;
+      line-height: 1.8;
+      font-size: 17px;
+      margin: 12px 0;
+    }
+
+    .signature {
+      margin-top: 55px;
+    }
+
+    .signature p {
+      margin: 3px 0;
+      color: #3a3a3a;
+    }
+
+    .date {
+      text-align: right;
+      font-size: 14px;
+      color: #888;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 40px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Acceptance Notification - <span class="highlight">ICCA 2025</span></h1>
+    <p>
+      Dear <strong>Ayoub</strong>,
+    </p>
+    <p>
+      We are pleased to inform you that you have been <strong>officially accepted into the 2025 ICCA Program</strong>.
+      Your application demonstrated a clear passion for programming and a commitment to excellence that impressed our admissions panel.
+    </p>
+    <p>
+      As a member of the ICCA (International Code & Computing Association), you will have access to exclusive mentorship sessions, development challenges, and a vibrant community of like-minded innovators.
+    </p>
+    <p>
+      Additional details regarding your onboarding and program access will be shared with you via email.
+    </p>
+    <p>
+      We look forward to witnessing your contributions and progress throughout the program.
+    </p>
+    <div class="signature">
+      <p>Sincerely,</p>
+      <p><strong>Sarah El-Houari</strong></p>
+      <p>Director of Admissions</p>
+      <p>International Code & Computing Association (ICCA)</p>
+    </div>
+    <div class="date">Issued: July 29, 2025</div>
+  </div>
+</body>
+</html>
