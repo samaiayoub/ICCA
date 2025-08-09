@@ -1,143 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ICCA International Chess Tournament - Final Leaderboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Royal Gambit Invitational — Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg: #050d1a; --card: rgba(10, 20, 40, 0.9); --muted:#9aa4b2; --accent:#6ee7b7; --gold:#FFD166; --silver:#E6E6E6; --bronze:#E4A76B;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;margin:0;}
+    body{
+      font-family:Inter, system-ui, sans-serif;
+      background: url('https://images.unsplash.com/photo-1602179039613-2b3c899ca7ac?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed, var(--bg);
+      color:#e6eef6; -webkit-font-smoothing:antialiased; padding:32px;
+    }
+    .wrap{max-width:1100px;margin:0 auto;backdrop-filter: blur(8px);}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+    .brand{display:flex;gap:16px;align-items:center;}
+    .logo{width:64px;height:64px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#ffd166,#ff7eb9);box-shadow:0 0 25px rgba(255,215,102,0.8);}
+    .logo svg{width:40px;height:40px;fill:white;}
+    h1{
+      font-family:'Playfair Display', serif;
+      font-size:42px;
+      margin:0;
+      text-shadow:0 0 15px rgba(255,255,255,0.5);
+    }
+    p.lead{margin:0;color:var(--muted);font-size:13px;}
+    .prizes{
+      margin:16px 0;
+      padding:12px;
+      background:rgba(255, 215, 102, 0.1);
+      border-radius:12px;
+      font-size:14px;
+      color:var(--gold);
+      text-align:center;
+      box-shadow:0 0 10px rgba(255, 215, 102, 0.3);
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f2f2f5;
-      color: #111;
+    .controls{display:flex;gap:12px;align-items:center;}
+    .search,.select,.btn{
+      border-radius:10px; padding:8px 12px; border:none; font-size:14px;
     }
+    .search{background:rgba(255,255,255,0.08);color:white;}
+    .select{background:rgba(255,255,255,0.08);color:white;}
+    .btn{background:linear-gradient(135deg,#6ee7b7,#3b82f6);color:#fff;cursor:pointer;box-shadow:0 0 15px rgba(110,231,183,0.7);}
 
-    header {
-      background: linear-gradient(135deg, #0e0e0e, #2c2c2c);
-      color: #ffffff;
-      padding: 50px 0;
-      text-align: center;
-      border-bottom: 4px solid #444;
-    }
-
-    header h1 {
-      font-size: 40px;
-      font-weight: 700;
-    }
-
-    header p {
-      font-size: 16px;
-      color: #bbbbbb;
-      margin-top: 8px;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 60px auto;
-      padding: 0 20px;
-    }
-
-    h2 {
-      font-size: 26px;
-      text-align: left;
-      margin-bottom: 25px;
-      padding-left: 8px;
-      font-weight: 600;
-      color: #333;
-      border-left: 5px solid #000;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    thead {
-      background-color: #000;
-      color: white;
-    }
-
-    thead th {
-      padding: 18px 16px;
-      text-align: left;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    tbody td {
-      padding: 16px 16px;
-      font-size: 15px;
-      border-bottom: 1px solid #eee;
-    }
-
-    tbody tr:hover {
-      background-color: #f5f5f5;
-    }
-
-    tr.gold {
-      background-color: #555;
-      font-weight: 600;
-    }
-
-    tr.silver, tr.bronze {
-      font-weight: 600;
-      background-color: transparent;
-      color: inherit;
-    }
-
-    @media (max-width: 768px) {
-      thead th, tbody td {
-        padding: 12px;
-        font-size: 14px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
-    }
+    .card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 0 25px rgba(0,0,0,0.8);}
+    table{width:100%;border-collapse:collapse;margin-top:12px;}
+    thead th{font-size:12px;text-align:left;padding:12px 10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+    tbody tr{border-top:1px solid rgba(255,255,255,0.08);}
+    tbody td{padding:14px 10px;font-size:15px;}
+    .player{display:flex;gap:12px;align-items:center;}
+    .avatar{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:700;color:#fff;box-shadow:0 0 15px rgba(255,255,255,0.2);}
+    .name{font-weight:600;}
+    .meta{font-size:12px;color:var(--muted);}
+    .rating{font-weight:700;}
+    .score{font-weight:700;color:var(--accent);}
+    .highlight{background:linear-gradient(90deg, rgba(110,231,183,0.1), transparent);}
+    .place{font-weight:800;width:56px;}
+    .medal{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:8px;}
+    .medal.g{background:linear-gradient(180deg,#ffe39e,#ffd166);color:#2b1b00;box-shadow:0 0 15px gold;}
+    .medal.s{background:linear-gradient(180deg,#f2f2f2,#e6e6e6);color:#141414;box-shadow:0 0 15px silver;}
+    .medal.b{background:linear-gradient(180deg,#f7d6bb,#e4a76b);color:#3b1f00;box-shadow:0 0 15px peru;}
   </style>
 </head>
 <body>
-  <header>
-    <h1>ICCA International Chess Tournament 2025</h1>
-    <p>Final Results · 42 Participants · Blitz Format · International</p>
-  </header>
-  <div class="container">
-    <h2>Official Leaderboard</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Username</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="gold"><td>1</td><td>ethuuayb</td><td>37</td></tr>
-        <tr class="silver"><td>2</td><td>jamesxu01</td><td>36</td></tr>
-        <tr class="bronze"><td>3</td><td>noahmills</td><td>35.5</td></tr>
-        <tr><td>4</td><td>serenlowe</td><td>34</td></tr>
-        <tr><td>5</td><td>elliot_77</td><td>33.5</td></tr>
-        <tr><td>6</td><td>lucyharper19</td><td>33</td></tr>
-        <tr><td>7</td><td>masonwells9</td><td>32.5</td></tr>
-        <tr><td>8</td><td>riley.dawson</td><td>32</td></tr>
-        <tr><td>9</td><td>theo.bellamy</td><td>31.5</td></tr>
-        <tr><td>10</td><td>camden08</td><td>31</td></tr>
-        <!-- Additional rows go here -->
-        <tr><td>42</td><td>viviandrew</td><td>15</td></tr>
-      </tbody>
-    </table>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.836 0 0 114.836 0 256s114.836 256 256 256 256-114.836 256-256S397.164 0 256 0zm0 64c105.869 0 192 86.131 192 192s-86.131 192-192 192S64 361.869 64 256 150.131 64 256 64zm-48 64v96h-96v64h96v96h64v-96h96v-64h-96v-96h-64z"/></svg>
+        </div>
+        <div>
+          <h1>Royal Gambit Invitational — Live Leaderboard</h1>
+          <p class="lead">Elite 24-player Swiss tournament · Rapid 10+5 · Updated live</p>
+        </div>
+      </div>
+      <div class="controls">
+        <input id="search" class="search" placeholder="Search username or rating…" />
+        <select id="filter" class="select">
+          <option value="all">All</option>
+          <option value="top8">Top 8</option>
+          <option value="wins">Most Wins</option>
+        </select>
+        <button id="shuffleBtn" class="btn">Shuffle</button>
+      </div>
+    </header>
+
+    <div class="prizes">
+       1st: $ &nbsp;|&nbsp;  2nd: $500 &nbsp;|&nbsp;  3rd: $250
+    </div>
+
+    <section class="card">
+      <table id="board">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Player</th>
+            <th>Title</th>
+            <th>Rating</th>
+            <th>Score</th>
+            <th>Wins</th>
+            <th>Losses</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
   </div>
+
+<script>
+(function(){
+  const rand = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
+  const shuffle = arr => arr.sort(()=>Math.random()-0.5);
+  const prefixes = ["Neo","King","Alpha","Shadow","Rogue","Viper","Blitz","Arc","Void","Quantum","Ghost","Hyper","Nova","Iron","Storm","Zen","Byte","Rift","Omega","Pulse"];
+  const suffixes = ["edge","flux","strike","blade","mate","spawn","drift","warp","spark","shade","cypher","bolt","craft","byte","storm","king","zero","lance","wing"];
+  const tags = ["x","_","","99","_GG","Pro","YT","_sweat"];
+  const titles = ["GM","IM","FM","CM","WGM","WIM","NM",""];
+
+  function makeUsername(){
+    return prefixes[rand(0,prefixes.length-1)] + suffixes[rand(0,suffixes.length-1)] + tags[rand(0,tags.length-1)] + (Math.random()<0.25? rand(2,999):'');
+  }
+
+  function avatarSeed(name){
+    let h=0; for(let i=0;i<name.length;i++)h=(h<<5)-h+name.charCodeAt(i);
+    return Math.abs(h);
+  }
+
+  function createPlayers(count){
+    const players=[];
+    for(let i=0;i<count;i++){
+      let name = makeUsername();
+      let rating = rand(1800,2550);
+      let wins = rand(0,5);
+      let losses = rand(0,3);
+      let score = (wins) - (losses*0.5) + (Math.random()*0.5);
+      players.push({name,rating,wins,losses,score:Math.round(score*100)/100,title:titles[rand(0,titles.length-1)]});
+    }
+    return players;
+  }
+
+  let players = createPlayers(24);
+  players[1] = {name: 'samaiayoub0', rating: 2034, wins: 4, losses: 1, score: 4.5, title: ''};
+
+  function sortPlayers(){
+    players.sort((a,b)=> b.score-a.score || b.rating-a.rating);
+  }
+
+  function medalForPlace(i){
+    if(i===0) return 'g'; if(i===1) return 's'; if(i===2) return 'b'; return '';
+  }
+
+  function renderBoard(){
+    sortPlayers();
+    const tbody = document.querySelector('#board tbody');
+    tbody.innerHTML='';
+    players.forEach((p,idx)=>{
+      const tr = document.createElement('tr');
+      if(idx<3) tr.classList.add('highlight');
+      const medal = medalForPlace(idx);
+      const placeTd = document.createElement('td');
+      placeTd.innerHTML = medal? `<div class="medal ${medal}">#${idx+1}</div>` : `#${idx+1}`;
+      const playerTd = document.createElement('td');
+      playerTd.innerHTML = `<div class="player"><div class="avatar" style="background:linear-gradient(135deg, hsl(${avatarSeed(p.name)%360} 70% 50%), hsl(${(avatarSeed(p.name)+120)%360} 70% 40%));">${p.name[0].toUpperCase()}</div><div><div class="name">${p.name}</div><div class="meta">${p.rating} • ${p.title||'—'}</div></div></div>`;
+      const titleTd = document.createElement('td'); titleTd.textContent = p.title||'—';
+      const ratingTd = document.createElement('td'); ratingTd.textContent = p.rating;
+      const scoreTd = document.createElement('td'); scoreTd.textContent = p.score.toFixed(2);
+      const winsTd = document.createElement('td'); winsTd.textContent = p.wins;
+      const lossesTd = document.createElement('td'); lossesTd.textContent = p.losses;
+      tr.append(placeTd, playerTd, titleTd, ratingTd, scoreTd, winsTd, lossesTd);
+      tbody.appendChild(tr);
+    });
+  }
+  renderBoard();
+})();
+</script>
 </body>
 </html>
