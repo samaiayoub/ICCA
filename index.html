@@ -1,129 +1,338 @@
-import React from "react";
+import React, { useMemo, useState, useEffect } from "react";
+
+// Interactive Tournament Tree
+// - Click any player box (a child) to advance that player to the next round.
+// - Winners propagate automatically toward the center champion.
+// - Live Board, animated live dot, glowy boxes, shimmering connectors, subtle background particles.
+// Usage: drop into src/ChessTournamentTree.jsx in a CRA/Vite React app and import it from App.jsx
 
 export default function ChessTournamentTree() {
-  const WIDTH = 1100;
-  const HEIGHT = 720;
-  const PADDING_X = 80;
-  const BOX_W = 160;
-  const BOX_H = 44;
+  const VIEW_W = 1200;
+  const VIEW_H = 760;
+  const PAD_X = 96;
+  const BOX_W = 200;
+  const BOX_H = 52;
 
-  const leftRound1 = [
-    "ShadowRook99",
-    "KnightStorm",
-    "PawnSlayer",
-    "BishopBlitz",
-    "EndgameMaster",
-    "CheckmatePro",
-    "RookRunner",
-    "FileCrusher",
+  // initial players (human-like varied names with elos)
+  const initialLeft = [
+    "Liam_Rivers (1872)",
+    "KnightStorm (2140)",
+    "Emma.G (1998)",
+    "BishopBlitz (2110)",
+    "NoahH (1924)",
+    "CheckmatePro (2031)",
+    "RookRunner (1799)",
+    "FileCrusher (1850)",
+  ];
+  const initialRight = [
+    "Olivia_Lee (1740)",
+    "CastlingKing (2075)",
+    "GambitGuru (2201)",
+    "MateInTwo (2004)",
+    "SofiaM (1682)",
+    "ForkFinder (1955)",
+    "Ava-W (2010)",
+    "Ethan.J (2068)",
   ];
 
-  const rightRound1 = [
-    "QueenHunt3r",
-    "CastlingKing",
-    "GambitGuru",
-    "MateInTwo",
-    "BlitzWizard",
-    "ForkFinder",
-    "samaiayoub0 (2060)",
-    "RandomOpponent (2502)",
+  // Live board main match (Ayoub shown as next game but not marked "live" on bracket)
+  const liveBoardMain = { left: "ayoubsamai0", leftElo: 2039, right: "Jay.3", rightElo: 2402 };
+  const upcomingMatches = [
+    "Liam_Rivers (1872) vs Olivia_Lee (1740)",
+    "NoahH (1924) vs GambitGuru (2201)",
+    "Ava-W (2010) vs Ethan.J (2068)",
   ];
 
-  const placeholder4 = Array(4).fill("");
-  const placeholder2 = Array(2).fill("");
+  // live match in bracket (choose a different one)
+  const livePair = ["KnightStorm (2140)", "BishopBlitz (2110)"];
 
-  const columns = [
-    leftRound1,
-    placeholder4,
-    placeholder2,
+  // columns: 0:left8,1:left4,2:left2,3:leftFinal,4:rightFinal,5:right2,6:right4,7:right8
+  const [columns, setColumns] = useState(() => [
+    initialLeft.slice(),
+    Array(4).fill("") ,
+    Array(2).fill("") ,
     [""],
-    placeholder2,
-    placeholder4,
-    rightRound1,
-  ];
+    [""],
+    Array(2).fill("") ,
+    Array(4).fill("") ,
+    initialRight.slice(),
+  ]);
 
+  // compute layout positions for rendering lines and boxes
   const colCount = columns.length;
-  const colGap = (WIDTH - PADDING_X * 2) / (colCount - 1);
+  const colGap = (VIEW_W - PAD_X * 2) / (colCount - 1);
 
-  const positions = columns.map((col, colIdx) => {
+  const positions = useMemo(() => columns.map((col, colIdx) => {
     const n = col.length;
-    const verticalGap = HEIGHT / n;
-    return col.map((value, idx) => {
-      const x = PADDING_X + colIdx * colGap;
-      const y = verticalGap * (idx + 0.5);
-      return { x, y, label: value, colIdx, idx };
-    });
-  });
+    const gapY = VIEW_H / n;
+    return col.map((label, idx) => ({ x: PAD_X + colIdx * colGap, y: gapY * (idx + 0.5), label, colIdx, idx }));
+  }), [columns]);
 
-  const lines = [];
-  for (let c = 0; c <= 2; c++) {
-    const children = positions[c];
-    const parents = positions[c + 1];
-    children.forEach((child, i) => {
-      const pIdx = Math.floor(i / 2);
-      const parent = parents[pIdx];
-      const midX = (child.x + parent.x) / 2;
-      lines.push({ x1: child.x + BOX_W / 2, y1: child.y, x2: midX, y2: child.y });
-      lines.push({ x1: midX, y1: child.y, x2: midX, y2: parent.y });
-      lines.push({ x1: midX, y1: parent.y, x2: parent.x - BOX_W / 2, y2: parent.y });
+  // build connectors based on current positions (left & right shrink to center)
+  const connections = useMemo(() => {
+    const con = [];
+    for (let c = 0; c <= 2; c++) {
+      const children = positions[c];
+      const parents = positions[c + 1];
+      children.forEach((child, i) => {
+        const parent = parents[Math.floor(i / 2)];
+        const startX = child.x + BOX_W / 2;
+        const startY = child.y;
+        const endX = parent.x - BOX_W / 2;
+        const endY = parent.y;
+        const midX = (startX + endX) / 2;
+        con.push({ d: `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`, side: 'left' });
+      });
+    }
+    for (let c = positions.length - 1; c >= positions.length - 3; c--) {
+      const children = positions[c];
+      const parents = positions[c - 1];
+      children.forEach((child, i) => {
+        const parent = parents[Math.floor(i / 2)];
+        const startX = child.x - BOX_W / 2;
+        const startY = child.y;
+        const endX = parent.x + BOX_W / 2;
+        const endY = parent.y;
+        const midX = (startX + endX) / 2;
+        con.push({ d: `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`, side: 'right' });
+      });
+    }
+    // finalists -> champion (positions[3][0] and positions[4][0])
+    const leftF = positions[3] && positions[3][0];
+    const rightF = positions[4] && positions[4][0];
+    const champX = PAD_X + 3.5 * colGap;
+    const champY = VIEW_H / 2;
+    const champW = 260;
+    if (leftF) {
+      const sx = leftF.x + BOX_W / 2; const sy = leftF.y; const midX = (sx + champX - champW / 2) / 2;
+      con.push({ d: `M ${sx} ${sy} L ${midX} ${sy} L ${midX} ${champY} L ${champX - champW / 2} ${champY}`, side: 'final' });
+    }
+    if (rightF) {
+      const sx = rightF.x - BOX_W / 2; const sy = rightF.y; const midX = (sx + champX + champW / 2) / 2;
+      con.push({ d: `M ${sx} ${sy} L ${midX} ${sy} L ${midX} ${champY} L ${champX + champW / 2} ${champY}`, side: 'final' });
+    }
+    return con;
+  }, [positions]);
+
+  // helpers
+  const isLiveLabel = (label) => label && (label === livePair[0] || label === livePair[1]);
+
+  // advance a clicked player to the parent slot
+  function advancePlayer(colIdx, idx) {
+    // if clicked column is left side (0..2) -> parent is colIdx+1 at Math.floor(idx/2)
+    // if clicked column is right side (5..7) -> parent is colIdx-1 at Math.floor(idx/2)
+    setColumns((cols) => {
+      const copy = cols.map((c) => c.slice());
+      if (colIdx <= 2) {
+        const parentCol = colIdx + 1;
+        const parentIdx = Math.floor(idx / 2);
+        copy[parentCol][parentIdx] = copy[colIdx][idx];
+        // clear downstream (optional) - we keep previous winners
+      } else if (colIdx >= 5) {
+        const parentCol = colIdx - 1;
+        const parentIdx = Math.floor(idx / 2);
+        copy[parentCol][parentIdx] = copy[colIdx][idx];
+      } else if (colIdx === 3) {
+        // clicking left finalist advances to champion slot (positions 3 -> champion left)
+        // we'll set columns[3][0] (leftFinal) already contains label; champion will be computed visually
+      } else if (colIdx === 4) {
+        // right finalist clicked
+      }
+      return copy;
     });
   }
-  for (let c = 6; c >= 4; c--) {
-    const children = positions[c];
-    const parents = positions[c - 1];
-    children.forEach((child, i) => {
-      const pIdx = Math.floor(i / 2);
-      const parent = parents[pIdx];
-      const midX = (child.x + parent.x) / 2;
-      lines.push({ x1: child.x - BOX_W / 2, y1: child.y, x2: midX, y2: child.y });
-      lines.push({ x1: midX, y1: child.y, x2: midX, y2: parent.y });
-      lines.push({ x1: midX, y1: parent.y, x2: parent.x + BOX_W / 2, y2: parent.y });
+
+  // allow clearing a parent (hold Shift while clicking a parent cell) - small utility
+  function clearSlot(colIdx, idx) {
+    setColumns((cols) => {
+      const copy = cols.map((c) => c.slice());
+      copy[colIdx][idx] = "";
+      return copy;
     });
   }
 
-  const isLiveLabel = (label) =>
-    label.includes("samaiayoub0") || label.includes("RandomOpponent");
+  // champion value is derived from columns[3][0] and columns[4][0] when both set
+  const champLeft = columns[3][0] || "";
+  const champRight = columns[4][0] || "";
+  const champion = columns[3][0] === columns[4][0] && columns[3][0] ? columns[3][0] : "";
 
-  const bg = "#071233";
-  const boxBlue = "#09284a";
-  const liveRed = "#c92b2b";
-  const lineColor = "#0e2a44";
+  // background particles: a simple state-driven list of particles to render (SVG circles)
+  const [particles, setParticles] = useState([]);
+  useEffect(() => {
+    let mounted = true;
+    const make = () => {
+      if (!mounted) return;
+      setParticles((p) => {
+        const next = p.filter((x) => Date.now() - x.t < 9000);
+        next.push({ x: Math.random() * VIEW_W, y: Math.random() * VIEW_H, r: 1 + Math.random() * 3, t: Date.now(), id: Math.random().toString(36).slice(2) });
+        return next;
+      });
+    };
+    const interval = setInterval(make, 800);
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
+
+  // styles and palette
+  const bg = "#05122a";
+  const strokeBlue = "#0f3a5f";
+  const liveGlow = "#ffde7a";
+  const boxGradA = "#062940";
+  const boxGradB = "#083d5e";
+  const liveColor = "#e85a4f";
 
   return (
-    <div style={{ background: `linear-gradient(180deg, ${bg} 0%, #041a2f 100%)`, minHeight: "100vh", padding: 24, color: "#fff", fontFamily: 'Inter, system-ui' }}>
-      <h1 style={{ textAlign: "center", fontSize: 32, marginBottom: 4, fontWeight: 800 }}>Grandmaster Invitational 2025</h1>
-      <p style={{ textAlign: "center", fontSize: 14, marginBottom: 20, opacity: 0.8 }}>16 Players | Single Elimination | Live Finals</p>
+    <div style={{ minHeight: "100vh", background: `linear-gradient(180deg, ${bg} 0%, #021322 100%)`, padding: 28, color: "#fff", fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto' }}>
+      <div style={{ maxWidth: VIEW_W, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 18 }}>
+          <div>
+            <div style={{ fontSize: 32, fontWeight: 900, background: 'linear-gradient(90deg,#9bd6ff,#e6f6ff)', WebkitBackgroundClip: 'text', color: 'transparent' }}>Grandmaster Invitational 2025</div>
+            <div style={{ marginTop: 6, fontSize: 13, opacity: 0.82 }}>16 Players · Single elimination · Live event</div>
+          </div>
 
-      <div style={{ position: "relative", width: WIDTH, height: HEIGHT, margin: "0 auto" }}>
-        <svg width={WIDTH} height={HEIGHT} style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }}>
-          {lines.map((seg, i) => (
-            <line key={i} x1={seg.x1} y1={seg.y1} x2={seg.x2} y2={seg.y2} stroke={lineColor} strokeWidth={2} />
-          ))}
-        </svg>
-
-        {positions.map((col, colIdx) => (
-          <React.Fragment key={colIdx}>
-            {col.map((cell, i) => {
-              const left = cell.x - BOX_W / 2;
-              const top = cell.y - BOX_H / 2;
-              const live = isLiveLabel(cell.label);
-              return (
-                <div key={i} style={{ position: "absolute", left, top, width: BOX_W, height: BOX_H, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 8, background: live ? liveRed : boxBlue, border: live ? "2px solid gold" : "1px solid rgba(255,255,255,0.1)", fontSize: 13, fontWeight: 600, boxShadow: live ? "0 0 20px rgba(255,215,0,0.7)" : "0 4px 10px rgba(0,0,0,0.4)" }}>
-                  {live && <span style={{ marginRight: 6, color: "gold" }}>●</span>}
-                  {cell.label}
+          {/* Live Board card */}
+          <div style={{ minWidth: 460, background: "linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.06))", borderRadius: 12, padding: 14, boxShadow: `0 12px 40px rgba(3,12,30,0.6)` }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ width: 58, height: 58, borderRadius: 12, background: "linear-gradient(180deg,#07263b,#08304b)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(232,90,79,0.07)` }}>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2v6" stroke="#ffd86b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M6 12h12" stroke="#ffd86b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M6 18h12" stroke="#ffd86b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
-              );
-            })}
-          </React.Fragment>
-        ))}
 
-        <div style={{ position: "absolute", left: PADDING_X + 3 * colGap - 60, top: HEIGHT / 2 - 50 }}>
-          <div style={{ width: 140, height: 100, borderRadius: 12, background: "#0a2540", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, color: "gold", boxShadow: "0 0 25px rgba(255,215,0,0.6)" }}>
-            FINAL
-            <span style={{ fontSize: 12, marginTop: 4, color: "#fff" }}>Best of 1</span>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>LIVE BOARD</div>
+                    <div style={{ fontSize: 12, color: liveColor, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 8, background: '#ff4b4b', boxShadow: '0 0 10px rgba(255,75,75,0.9)', animation: 'pulseRed 1200ms infinite' }}></span>
+                      <div style={{ fontWeight: 900, color: liveGlow }}>LIVE</div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 8, fontSize: 16, fontWeight: 900 }}>
+                    <span style={{ color: '#fff' }}>{liveBoardMain.left}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.6)', margin: '0 8px' }}>({liveBoardMain.leftElo})</span>
+                    <span style={{ color: 'rgba(255,255,255,0.65)', margin: '0 10px' }}>VS</span>
+                    <span style={{ color: '#fff' }}>{liveBoardMain.right}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.6)', marginLeft: 8 }}>({liveBoardMain.rightElo})</span>
+                  </div>
+
+                  <div style={{ marginTop: 8, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>Starts in 8m · Round of 16</div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right', minWidth: 180 }}>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginBottom: 8 }}>Up next</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.95)', lineHeight: 1.5 }}>
+                  {upcomingMatches.map((m, i) => <div key={i} style={{ opacity: 0.95 }}>{m}</div>)}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ height: 6, marginTop: 12, borderRadius: 6, background: `linear-gradient(90deg, rgba(255,222,122,0.18), rgba(232,90,79,0.12))`, boxShadow: `0 6px 20px rgba(255,222,122,0.06)` }} />
           </div>
         </div>
+
+        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'center', position: 'relative' }}>
+          {/* particles behind the bracket */}
+          <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} width="100%" height={VIEW_H} preserveAspectRatio="xMidYMid meet" style={{ position: 'absolute', left: 0, top: 0, zIndex: 0 }}>
+            {positions.length > 0 && positions[0].map((_, i) => (
+              <circle key={'bg'+i} cx={Math.random() * VIEW_W} cy={Math.random() * VIEW_H} r={1 + Math.random()*2} fill="rgba(255,255,255,0.03)"></circle>
+            ))}
+            {/** dynamic particles */}
+            {/** Using React state for particles */}
+          </svg>
+
+          <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} width="100%" height={VIEW_H} preserveAspectRatio="xMidYMid meet" style={{ position: 'relative', zIndex: 1 }}>
+            <defs>
+              <linearGradient id="bGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor={boxGradA} />
+                <stop offset="100%" stopColor={boxGradB} />
+              </linearGradient>
+
+              <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="gblur" />
+                <feMerge>
+                  <feMergeNode in="gblur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+
+              <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#001529" floodOpacity="0.7" />
+              </filter>
+
+              <linearGradient id="liveStroke" x1="0" x2="1">
+                <stop offset="0%" stopColor="#ffd86b" />
+                <stop offset="100%" stopColor="#ff7a7a" />
+              </linearGradient>
+            </defs>
+
+            {/* shimmering connectors */}
+            {connections.map((c, i) => (
+              <path key={i} d={c.d} fill="none" stroke={c.side === 'final' ? liveGlow : strokeBlue} strokeWidth={c.side === 'final' ? 3.2 : 2.2} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={c.side === 'final' ? '8 6' : '6 6'} style={{ animation: 'shimmer 6s linear infinite' }} opacity={0.98} />
+            ))}
+
+            {/* boxes (interactive) */}
+            {positions.map((col, colIdx) => (
+              <g key={colIdx}>
+                {col.map((cell, j) => {
+                  const x = cell.x - BOX_W / 2;
+                  const y = cell.y - BOX_H / 2;
+                  const label = columns[colIdx][j] || cell.label || "";
+                  const live = isLiveLabel(label);
+
+                  return (
+                    <g key={j} transform={`translate(${x}, ${y})`} style={{ cursor: label ? 'pointer' : 'default' }}>
+                      <rect x={-6} y={-6} width={BOX_W + 12} height={BOX_H + 12} rx={12} fill="none" stroke={live ? liveGlow : 'rgba(15,58,95,0.06)'} strokeWidth={live ? 3 : 1} filter={live ? 'url(#outerGlow)' : undefined} />
+
+                      <rect x={0} y={0} rx={10} width={BOX_W} height={BOX_H} fill="url(#bGrad)" stroke={live ? '#ffd86b' : 'rgba(255,255,255,0.06)'} strokeWidth={live ? 2.4 : 1} filter={live ? 'url(#softShadow)' : undefined}
+                        onClick={() => advancePlayer(colIdx, j)} onContextMenu={(e)=>{ e.preventDefault(); clearSlot(colIdx,j); }} />
+
+                      {label ? (
+                        <text x={BOX_W / 2} y={BOX_H / 2 + 1} textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: 13, fontWeight: 800, fill: '#fff', pointerEvents: 'none' }}>
+                          {label}
+                        </text>
+                      ) : null}
+
+                      {live ? (
+                        <g>
+                          <circle cx={16} cy={BOX_H / 2} r={7} fill="#ffd86b" />
+                          <circle cx={16} cy={BOX_H / 2} r={11} fill="none" stroke="#ffd86b" strokeWidth={1} opacity={0.18} />
+                        </g>
+                      ) : null}
+                    </g>
+                  );
+                })}
+              </g>
+            ))}
+
+            {/* champion box (glorious) */}
+            <g transform={`translate(${PAD_X + 3.5 * colGap - 260/2}, ${VIEW_H / 2 - 110/2})`}>
+              <rect x={-8} y={-8} width={260 + 16} height={110 + 16} rx={18} fill="none" stroke={liveGlow} strokeWidth={4} opacity={0.14} filter="url(#outerGlow)" />
+              <rect x={0} y={0} width={260} height={110} rx={14} fill="url(#bGrad)" stroke={liveGlow} strokeWidth={2.4} filter="url(#softShadow)" />
+
+              <text x={260 / 2} y={110 / 2 - 8} textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: 20, fontWeight: 900, fill: '#ffd86b' }}>
+                CHAMPION
+              </text>
+              <text x={260 / 2} y={110 / 2 + 22} textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: 12, fill: '#fff', opacity: 0.9 }}>
+                Grandmaster Invitational 2025
+              </text>
+
+              {/* show left/right finalists inside champion if present */}
+              <text x={260 / 2} y={110 / 2 + 44} textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: 12, fill: '#fff', opacity: 0.8 }}>
+                { (columns[3][0] || 'TBD') } vs { (columns[4][0] || 'TBD') }
+              </text>
+            </g>
+          </svg>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes pulseRed { 0% { transform: scale(1) } 50% { transform: scale(1.15) } 100% { transform: scale(1) } }
+        @keyframes shimmer { 0% { stroke-dashoffset: 0 } 100% { stroke-dashoffset: -120 } }
+        svg path { vector-effect: non-scaling-stroke; }
+        svg path[style*="shimmer"] { stroke-dasharray: 10 6; stroke-dashoffset: 0; }
+        .live-dot { animation: pulseRed 1200ms infinite; }
+        /* tooltip hint: right-click to clear a slot */
+      `}</style>
     </div>
   );
 }
