@@ -1,181 +1,129 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Royal Gambit Invitational — Leaderboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg: #050d1a; --card: rgba(10, 20, 40, 0.9); --muted:#9aa4b2; --accent:#6ee7b7; --gold:#FFD166; --silver:#E6E6E6; --bronze:#E4A76B;
-    }
-    *{box-sizing:border-box;}
-    html,body{height:100%;margin:0;}
-    body{
-      font-family:Inter, system-ui, sans-serif;
-      background: url('https://images.unsplash.com/photo-1602179039613-2b3c899ca7ac?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed, var(--bg);
-      color:#e6eef6; -webkit-font-smoothing:antialiased; padding:32px;
-    }
-    .wrap{max-width:1100px;margin:0 auto;backdrop-filter: blur(8px);}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-    .brand{display:flex;gap:16px;align-items:center;}
-    .logo{width:64px;height:64px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#ffd166,#ff7eb9);box-shadow:0 0 25px rgba(255,215,102,0.8);}
-    .logo svg{width:40px;height:40px;fill:white;}
-    h1{
-      font-family:'Playfair Display', serif;
-      font-size:42px;
-      margin:0;
-      text-shadow:0 0 15px rgba(255,255,255,0.5);
-    }
-    p.lead{margin:0;color:var(--muted);font-size:13px;}
-    .prizes{
-      margin:16px 0;
-      padding:12px;
-      background:rgba(255, 215, 102, 0.1);
-      border-radius:12px;
-      font-size:14px;
-      color:var(--gold);
-      text-align:center;
-      box-shadow:0 0 10px rgba(255, 215, 102, 0.3);
-    }
+import React from "react";
 
-    .controls{display:flex;gap:12px;align-items:center;}
-    .search,.select,.btn{
-      border-radius:10px; padding:8px 12px; border:none; font-size:14px;
-    }
-    .search{background:rgba(255,255,255,0.08);color:white;}
-    .select{background:rgba(255,255,255,0.08);color:white;}
-    .btn{background:linear-gradient(135deg,#6ee7b7,#3b82f6);color:#fff;cursor:pointer;box-shadow:0 0 15px rgba(110,231,183,0.7);}
+export default function ChessTournamentTree() {
+  const WIDTH = 1100;
+  const HEIGHT = 720;
+  const PADDING_X = 80;
+  const BOX_W = 160;
+  const BOX_H = 44;
 
-    .card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 0 25px rgba(0,0,0,0.8);}
-    table{width:100%;border-collapse:collapse;margin-top:12px;}
-    thead th{font-size:12px;text-align:left;padding:12px 10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
-    tbody tr{border-top:1px solid rgba(255,255,255,0.08);}
-    tbody td{padding:14px 10px;font-size:15px;}
-    .player{display:flex;gap:12px;align-items:center;}
-    .avatar{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:700;color:#fff;box-shadow:0 0 15px rgba(255,255,255,0.2);}
-    .name{font-weight:600;}
-    .meta{font-size:12px;color:var(--muted);}
-    .rating{font-weight:700;}
-    .score{font-weight:700;color:var(--accent);}
-    .highlight{background:linear-gradient(90deg, rgba(110,231,183,0.1), transparent);}
-    .place{font-weight:800;width:56px;}
-    .medal{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:8px;}
-    .medal.g{background:linear-gradient(180deg,#ffe39e,#ffd166);color:#2b1b00;box-shadow:0 0 15px gold;}
-    .medal.s{background:linear-gradient(180deg,#f2f2f2,#e6e6e6);color:#141414;box-shadow:0 0 15px silver;}
-    .medal.b{background:linear-gradient(180deg,#f7d6bb,#e4a76b);color:#3b1f00;box-shadow:0 0 15px peru;}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.836 0 0 114.836 0 256s114.836 256 256 256 256-114.836 256-256S397.164 0 256 0zm0 64c105.869 0 192 86.131 192 192s-86.131 192-192 192S64 361.869 64 256 150.131 64 256 64zm-48 64v96h-96v64h96v96h64v-96h96v-64h-96v-96h-64z"/></svg>
-        </div>
-        <div>
-          <h1>Royal Gambit Invitational — Live Leaderboard</h1>
-          <p class="lead">Elite 24-player Swiss tournament · Rapid 10+5 · Updated live</p>
-        </div>
-      </div>
-      <div class="controls">
-        <input id="search" class="search" placeholder="Search username or rating…" />
-        <select id="filter" class="select">
-          <option value="all">All</option>
-          <option value="top8">Top 8</option>
-          <option value="wins">Most Wins</option>
-        </select>
-        <button id="shuffleBtn" class="btn">Shuffle</button>
-      </div>
-    </header>
+  const leftRound1 = [
+    "ShadowRook99",
+    "KnightStorm",
+    "PawnSlayer",
+    "BishopBlitz",
+    "EndgameMaster",
+    "CheckmatePro",
+    "RookRunner",
+    "FileCrusher",
+  ];
 
-    <div class="prizes">
-       1st: $800 &nbsp;|&nbsp;  2nd: $500 &nbsp;|&nbsp;  3rd: $250
-    </div>
+  const rightRound1 = [
+    "QueenHunt3r",
+    "CastlingKing",
+    "GambitGuru",
+    "MateInTwo",
+    "BlitzWizard",
+    "ForkFinder",
+    "samaiayoub0 (2060)",
+    "RandomOpponent (2502)",
+  ];
 
-    <section class="card">
-      <table id="board">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Player</th>
-            <th>Title</th>
-            <th>Rating</th>
-            <th>Score</th>
-            <th>Wins</th>
-            <th>Losses</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-  </div>
+  const placeholder4 = Array(4).fill("");
+  const placeholder2 = Array(2).fill("");
 
-<script>
-(function(){
-  const rand = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
-  const shuffle = arr => arr.sort(()=>Math.random()-0.5);
-  const prefixes = ["Neo","King","Alpha","Shadow","Rogue","Viper","Blitz","Arc","Void","Quantum","Ghost","Hyper","Nova","Iron","Storm","Zen","Byte","Rift","Omega","Pulse"];
-  const suffixes = ["edge","flux","strike","blade","mate","spawn","drift","warp","spark","shade","cypher","bolt","craft","byte","storm","king","zero","lance","wing"];
-  const tags = ["x","_","","99","_GG","Pro","YT","_sweat"];
-  const titles = ["GM","IM","FM","CM","WGM","WIM","NM",""];
+  const columns = [
+    leftRound1,
+    placeholder4,
+    placeholder2,
+    [""],
+    placeholder2,
+    placeholder4,
+    rightRound1,
+  ];
 
-  function makeUsername(){
-    return prefixes[rand(0,prefixes.length-1)] + suffixes[rand(0,suffixes.length-1)] + tags[rand(0,tags.length-1)] + (Math.random()<0.25? rand(2,999):'');
-  }
+  const colCount = columns.length;
+  const colGap = (WIDTH - PADDING_X * 2) / (colCount - 1);
 
-  function avatarSeed(name){
-    let h=0; for(let i=0;i<name.length;i++)h=(h<<5)-h+name.charCodeAt(i);
-    return Math.abs(h);
-  }
+  const positions = columns.map((col, colIdx) => {
+    const n = col.length;
+    const verticalGap = HEIGHT / n;
+    return col.map((value, idx) => {
+      const x = PADDING_X + colIdx * colGap;
+      const y = verticalGap * (idx + 0.5);
+      return { x, y, label: value, colIdx, idx };
+    });
+  });
 
-  function createPlayers(count){
-    const players=[];
-    for(let i=0;i<count;i++){
-      let name = makeUsername();
-      let rating = rand(1800,2550);
-      let wins = rand(0,5);
-      let losses = rand(0,3);
-      let score = (wins) - (losses*0.5) + (Math.random()*0.5);
-      players.push({name,rating,wins,losses,score:Math.round(score*100)/100,title:titles[rand(0,titles.length-1)]});
-    }
-    return players;
-  }
-
-  let players = createPlayers(24);
-  players[1] = {name: 'samaiayoub0', rating: 2034, wins: 4, losses: 1, score: 4.5, title: ''};
-
-  function sortPlayers(){
-    players.sort((a,b)=> b.score-a.score || b.rating-a.rating);
-  }
-
-  function medalForPlace(i){
-    if(i===0) return 'g'; if(i===1) return 's'; if(i===2) return 'b'; return '';
-  }
-
-  function renderBoard(){
-    sortPlayers();
-    const tbody = document.querySelector('#board tbody');
-    tbody.innerHTML='';
-    players.forEach((p,idx)=>{
-      const tr = document.createElement('tr');
-      if(idx<3) tr.classList.add('highlight');
-      const medal = medalForPlace(idx);
-      const placeTd = document.createElement('td');
-      placeTd.innerHTML = medal? `<div class="medal ${medal}">#${idx+1}</div>` : `#${idx+1}`;
-      const playerTd = document.createElement('td');
-      playerTd.innerHTML = `<div class="player"><div class="avatar" style="background:linear-gradient(135deg, hsl(${avatarSeed(p.name)%360} 70% 50%), hsl(${(avatarSeed(p.name)+120)%360} 70% 40%));">${p.name[0].toUpperCase()}</div><div><div class="name">${p.name}</div><div class="meta">${p.rating} • ${p.title||'—'}</div></div></div>`;
-      const titleTd = document.createElement('td'); titleTd.textContent = p.title||'—';
-      const ratingTd = document.createElement('td'); ratingTd.textContent = p.rating;
-      const scoreTd = document.createElement('td'); scoreTd.textContent = p.score.toFixed(2);
-      const winsTd = document.createElement('td'); winsTd.textContent = p.wins;
-      const lossesTd = document.createElement('td'); lossesTd.textContent = p.losses;
-      tr.append(placeTd, playerTd, titleTd, ratingTd, scoreTd, winsTd, lossesTd);
-      tbody.appendChild(tr);
+  const lines = [];
+  for (let c = 0; c <= 2; c++) {
+    const children = positions[c];
+    const parents = positions[c + 1];
+    children.forEach((child, i) => {
+      const pIdx = Math.floor(i / 2);
+      const parent = parents[pIdx];
+      const midX = (child.x + parent.x) / 2;
+      lines.push({ x1: child.x + BOX_W / 2, y1: child.y, x2: midX, y2: child.y });
+      lines.push({ x1: midX, y1: child.y, x2: midX, y2: parent.y });
+      lines.push({ x1: midX, y1: parent.y, x2: parent.x - BOX_W / 2, y2: parent.y });
     });
   }
-  renderBoard();
-})();
-</script>
-</body>
-</html>
+  for (let c = 6; c >= 4; c--) {
+    const children = positions[c];
+    const parents = positions[c - 1];
+    children.forEach((child, i) => {
+      const pIdx = Math.floor(i / 2);
+      const parent = parents[pIdx];
+      const midX = (child.x + parent.x) / 2;
+      lines.push({ x1: child.x - BOX_W / 2, y1: child.y, x2: midX, y2: child.y });
+      lines.push({ x1: midX, y1: child.y, x2: midX, y2: parent.y });
+      lines.push({ x1: midX, y1: parent.y, x2: parent.x + BOX_W / 2, y2: parent.y });
+    });
+  }
+
+  const isLiveLabel = (label) =>
+    label.includes("samaiayoub0") || label.includes("RandomOpponent");
+
+  const bg = "#071233";
+  const boxBlue = "#09284a";
+  const liveRed = "#c92b2b";
+  const lineColor = "#0e2a44";
+
+  return (
+    <div style={{ background: `linear-gradient(180deg, ${bg} 0%, #041a2f 100%)`, minHeight: "100vh", padding: 24, color: "#fff", fontFamily: 'Inter, system-ui' }}>
+      <h1 style={{ textAlign: "center", fontSize: 32, marginBottom: 4, fontWeight: 800 }}>Grandmaster Invitational 2025</h1>
+      <p style={{ textAlign: "center", fontSize: 14, marginBottom: 20, opacity: 0.8 }}>16 Players | Single Elimination | Live Finals</p>
+
+      <div style={{ position: "relative", width: WIDTH, height: HEIGHT, margin: "0 auto" }}>
+        <svg width={WIDTH} height={HEIGHT} style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }}>
+          {lines.map((seg, i) => (
+            <line key={i} x1={seg.x1} y1={seg.y1} x2={seg.x2} y2={seg.y2} stroke={lineColor} strokeWidth={2} />
+          ))}
+        </svg>
+
+        {positions.map((col, colIdx) => (
+          <React.Fragment key={colIdx}>
+            {col.map((cell, i) => {
+              const left = cell.x - BOX_W / 2;
+              const top = cell.y - BOX_H / 2;
+              const live = isLiveLabel(cell.label);
+              return (
+                <div key={i} style={{ position: "absolute", left, top, width: BOX_W, height: BOX_H, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 8, background: live ? liveRed : boxBlue, border: live ? "2px solid gold" : "1px solid rgba(255,255,255,0.1)", fontSize: 13, fontWeight: 600, boxShadow: live ? "0 0 20px rgba(255,215,0,0.7)" : "0 4px 10px rgba(0,0,0,0.4)" }}>
+                  {live && <span style={{ marginRight: 6, color: "gold" }}>●</span>}
+                  {cell.label}
+                </div>
+              );
+            })}
+          </React.Fragment>
+        ))}
+
+        <div style={{ position: "absolute", left: PADDING_X + 3 * colGap - 60, top: HEIGHT / 2 - 50 }}>
+          <div style={{ width: 140, height: 100, borderRadius: 12, background: "#0a2540", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, color: "gold", boxShadow: "0 0 25px rgba(255,215,0,0.6)" }}>
+            FINAL
+            <span style={{ fontSize: 12, marginTop: 4, color: "#fff" }}>Best of 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
