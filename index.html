@@ -125,14 +125,17 @@
     }
 
     .success-message {
-      margin-top: 15px;
-      font-size: 1em;
+      margin-top: 10px;
+      font-size: 0.95em;
       color: #155724;
       background: #d4edda;
       border: 1px solid #c3e6cb;
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       display: none;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -150,7 +153,7 @@
       <input type="text" id="instagram" placeholder="Instagram Username" required><br>
       <button type="submit">Register</button>
       <div class="success-message" id="successMessage">
-        ✅ You have been registered, check your DMs soon.<br>⚠️ Don't register twice or you will be kicked!
+        ✅ You have been registered, check your DMs soon.<br>⚠️ Do not register twice or you are out!
       </div>
     </form>
 
@@ -171,9 +174,9 @@
 
   <script>
     const countdown = document.getElementById("countdown");
+    const successMessage = document.getElementById("successMessage");
 
-    // 🔴 Set fixed global deadline in Setif timezone (UTC+1)
-    // Example: August 23, 2025 at 18:00 Setif time
+    // 🔴 Fixed global deadline in Setif timezone (UTC+1)
     const endDate = new Date("2025-08-23T18:00:00+01:00");
 
     function updateCountdown() {
@@ -195,6 +198,32 @@
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
+
+    // 🔵 Registration + Discord webhook
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const instagram = document.getElementById("instagram").value.trim();
+
+      if (!name || !instagram) return;
+
+      const webhookURL = "https://discord.com/api/webhooks/1406307633148989471/d7-Gs39h3n6xJSNLko2WSSbKoIFtnqoFKi9HTeN8_YEIgt1h2jhcPIePuEOrzgvr6rHz";
+
+      const payload = {
+        content: `📩 **New Registration**\n👤 Name: ${name}\n📷 Instagram: ${instagram}`
+      };
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        successMessage.style.display = "block";
+      }).catch(() => {
+        alert("❌ Error: Could not register. Try again.");
+      });
+    });
   </script>
 </body>
 </html>
