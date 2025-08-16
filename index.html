@@ -1,249 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Chess Masters Invitational 2025</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #0b1e33, #050d18);
-    color: white;
-    overflow-x: hidden;
-  }
-  h1 {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 2.5rem;
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .live-board {
-    margin: 20px auto;
-    background: rgba(0,0,50,0.7);
-    padding: 15px;
-    border-radius: 12px;
-    width: 80%;
-    max-width: 600px;
-    border: 2px solid #00f0ff;
-    box-shadow: 0 0 15px #00f0ff;
-  }
-  .live-title {
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .live-dot {
-    width: 10px;
-    height: 10px;
-    background: red;
-    border-radius: 50%;
-    animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.6); opacity: 0.6; }
-  }
-  .next-game {
-    margin-top: 10px;
-    font-size: 1.1rem;
-  }
-  .schedule {
-    margin-top: 5px;
-    font-size: 0.9rem;
-    opacity: 0.8;
-  }
-  .bracket {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 0;
-    position: relative;
-  }
-  .round {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: 500px;
-    margin: 0 20px;
-    position: relative;
-  }
-  .match {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-  }
-  .player {
-    background: rgba(10,30,60,0.9);
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #00eaff;
-    box-shadow: 0 0 10px #00eaff;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .player:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #00eaff;
-  }
-  .champion {
-    background: rgba(60,40,0,0.9);
-    border: 1px solid gold;
-    box-shadow: 0 0 20px gold;
-    font-weight: bold;
-  }
-  /* Connecting lines */
-  .bracket svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-  }
-  .line {
-    stroke: #00eaff;
-    stroke-width: 2;
-    stroke-dasharray: 5, 5;
-    animation: dash 4s linear infinite;
-  }
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -1000;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Hunt Begins</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('picture.png') no-repeat center center/cover;
+      color: #2c3e50;
+      text-align: center;
     }
-  }
-  /* Particles */
-  .particle {
-    position: fixed;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: float 10s infinite;
-    pointer-events: none;
-    z-index: -1;
-  }
-  @keyframes float {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100vh); opacity: 0; }
-  }
-</style>
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.85);
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3em;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .countdown {
+      font-size: 2em;
+      margin: 20px 0;
+      font-weight: bold;
+      color: #e74c3c;
+    }
+
+    .subtext {
+      font-size: 1em;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    .details-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: #2ecc71;
+    }
+
+    .details-btn:hover {
+      background: #27ae60;
+    }
+
+    .note-box {
+      margin-top: 40px;
+      background: #f9f9f9;
+      border-left: 5px solid #3498db;
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .note-icon {
+      font-size: 2em;
+      margin-right: 15px;
+      color: #3498db;
+    }
+
+    .note-text {
+      text-align: left;
+      font-size: 1em;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay">
+    <h1>WELCOME, YOU FOUND THE CODE.</h1>
+    <div class="countdown" id="countdown"></div>
+    <div class="subtext">till the registrations are off</div>
+    <p>Now to register you have to type your first name, and your Instagram user.<br>
+    Example: mohammed (mohammed.23)<br>
+    The places in this game are limited, if this page is opened that means there are still some places.</p>
 
-<h1>Chess Masters Invitational 2025</h1>
+    <form id="registrationForm">
+      <input type="text" id="name" placeholder="First Name" required><br>
+      <input type="text" id="instagram" placeholder="Instagram Username" required><br>
+      <button type="submit">Register</button>
+    </form>
 
-<div class="live-board">
-  <div class="live-title"><div class="live-dot"></div> LIVE Board</div>
-  <div class="next-game">Next Game: ayoubsamai0 (2039) VS Jay.3 (2402)</div>
-  <div class="schedule">
-    1. KnightStorm (2140) VS BishopBlitz (2110)<br>
-    2. QueenCrusher_92 (1999) VS CheckMate-King (2305)<br>
-    3. Lila.M (2025) VS Anton_7 (2088)
+    <br>
+    <a href="details.html"><button class="details-btn">Details</button></a>
+
+    <div class="note-box">
+      <div class="note-icon">ℹ️</div>
+      <div class="note-text">
+        Please read the details before registering. A message will be sent to your Instagram DMs, make sure to have your DMs open, or create a new account just for this, once a link appears in your instagram DMs, thats when you know you were selected to participate
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="bracket" id="bracket">
-  <svg width="100%" height="100%" id="lines"></svg>
-</div>
+  <script>
+    // Countdown timer
+    const countdown = document.getElementById("countdown");
+    const endDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000); // 5 days
 
-<script>
-const players = [
-  ["KnightStorm (2140)", "BishopBlitz (2110)"],
-  ["QueenCrusher_92 (1999)", "CheckMate-King (2305)"],
-  ["Lila.M (2025)", "Anton_7 (2088)"],
-  ["RookRider (2101)", "PawnSlayer99 (2015)"],
-  ["KingHunter77 (2098)", "MateInTwo_3 (2201)"],
-  ["SilentKnight_ (1985)", "GrandPatzer (2150)"],
-  ["BlitzMasterX (2054)", "TacticTime (2007)"],
-  ["ayoubsamai0 (2039)", "Jay.3 (2402)"]
-];
+    function updateCountdown() {
+      const now = new Date();
+      const diff = endDate - now;
 
-const bracket = document.getElementById("bracket");
-const svg = document.getElementById("lines");
+      if (diff <= 0) {
+        countdown.textContent = "Registration Closed";
+        return;
+      }
 
-function createRound(matchData, isFinal=false) {
-  const roundDiv = document.createElement("div");
-  roundDiv.className = "round";
-  matchData.forEach(match => {
-    const matchDiv = document.createElement("div");
-    matchDiv.className = "match";
-    match.forEach(playerName => {
-      const playerDiv = document.createElement("div");
-      playerDiv.className = "player";
-      if (isFinal) playerDiv.classList.add("champion");
-      playerDiv.textContent = playerName || "";
-      playerDiv.onclick = () => advancePlayer(playerDiv);
-      playerDiv.oncontextmenu = e => { e.preventDefault(); playerDiv.textContent = ""; };
-      matchDiv.appendChild(playerDiv);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdown.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Send registration to Discord webhook
+    const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // replace with your webhook
+
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const instagram = document.getElementById("instagram").value;
+
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: `📌 New Registration:\n👤 Name: ${name}\n📸 Instagram: @${instagram}`
+        })
+      }).then(() => {
+        alert("Registration submitted! Check your Instagram DMs soon.");
+      }).catch(() => {
+        alert("Error submitting registration.");
+      });
     });
-    roundDiv.appendChild(matchDiv);
-  });
-  bracket.appendChild(roundDiv);
-  return roundDiv;
-}
-
-let rounds = [];
-rounds.push(createRound(players));
-rounds.push(createRound([["",""],["",""],["",""],["",""]]));
-rounds.push(createRound([["",""],["",""]]));
-rounds.push(createRound([["",""]], true));
-
-function advancePlayer(playerDiv) {
-  if (!playerDiv.textContent) return;
-  const roundIndex = [...bracket.children].indexOf(playerDiv.closest(".round"));
-  const matchIndex = [...playerDiv.closest(".round").children].indexOf(playerDiv.closest(".match"));
-  const nextRound = bracket.children[roundIndex+1];
-  const targetMatchIndex = Math.floor(matchIndex/2);
-  const targetSlot = matchIndex % 2 === 0 ? 0 : 1;
-  const nextPlayerDiv = nextRound.children[targetMatchIndex].children[0+targetSlot];
-  nextPlayerDiv.textContent = playerDiv.textContent;
-}
-
-function drawLines() {
-  svg.innerHTML = "";
-  const roundsEls = [...bracket.getElementsByClassName("round")];
-  for (let i=0; i<roundsEls.length-1; i++) {
-    const currentRound = roundsEls[i];
-    const nextRound = roundsEls[i+1];
-    const matches = [...currentRound.getElementsByClassName("match")];
-    matches.forEach((matchEl, matchIdx) => {
-      const rect1 = matchEl.children[0].getBoundingClientRect();
-      const rect2 = matchEl.children[1].getBoundingClientRect();
-      const nextMatch = nextRound.children[Math.floor(matchIdx/2)];
-      const rectNext = nextMatch.getBoundingClientRect();
-      const x1 = rect1.right - bracket.getBoundingClientRect().left;
-      const y1 = (rect1.top + rect1.bottom)/2 - bracket.getBoundingClientRect().top;
-      const x2 = rect2.right - bracket.getBoundingClientRect().left;
-      const y2 = (rect2.top + rect2.bottom)/2 - bracket.getBoundingClientRect().top;
-      const xNext = rectNext.left - bracket.getBoundingClientRect().left;
-      const yNext = (rectNext.top + rectNext.bottom)/2 - bracket.getBoundingClientRect().top;
-      svg.innerHTML += `<line class="line" x1="${x1}" y1="${y1}" x2="${xNext}" y2="${yNext}" />`;
-      svg.innerHTML += `<line class="line" x1="${x2}" y1="${y2}" x2="${xNext}" y2="${yNext}" />`;
-    });
-  }
-}
-
-window.addEventListener("resize", drawLines);
-window.addEventListener("load", () => {
-  drawLines();
-  spawnParticles();
-});
-
-function spawnParticles() {
-  for (let i=0; i<20; i++) {
-    const p = document.createElement("div");
-    p.className = "particle";
-    const size = Math.random()*4+2;
-    p.style.width = size+"px";
-    p.style.height = size+"px";
-    p.style.left = Math.random()*100+"vw";
-    p.style.top = Math.random()*100+"vh";
-    p.style.animationDuration = (Math.random()*10+5)+"s";
-    document.body.appendChild(p);
-  }
-}
-</script>
-
+  </script>
 </body>
 </html>
