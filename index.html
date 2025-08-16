@@ -39,6 +39,7 @@
       margin: 20px 0;
       font-weight: bold;
       color: #e74c3c;
+      display: block;
     }
 
     .subtext {
@@ -122,12 +123,23 @@
       text-align: center;
       box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
     }
+
+    .success-message {
+      margin-top: 15px;
+      font-size: 1em;
+      color: #155724;
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="overlay">
     <h1>WELCOME, YOU FOUND THE CODE.</h1>
-    <div class="countdown" id="countdown"></div>
+    <div class="countdown" id="countdown">Loading timer...</div>
     <div class="subtext">till the registrations are off</div>
     <p>Now to register you have to type your first name, and your Instagram user.<br>
     Example: mohammed (mohammed.23)<br>
@@ -137,6 +149,9 @@
       <input type="text" id="name" placeholder="First Name" required><br>
       <input type="text" id="instagram" placeholder="Instagram Username" required><br>
       <button type="submit">Register</button>
+      <div class="success-message" id="successMessage">
+        ✅ You have been registered, check your DMs soon.<br>⚠️ Don't register twice or you will be kicked!
+      </div>
     </form>
 
     <br>
@@ -150,18 +165,21 @@
     </div>
 
     <div class="red-note">
-      🔥 All this event is being hosted by a single person.
+      All this event is being hosted by a single person.
     </div>
   </div>
 
   <script>
-    // Countdown timer
+    // Global countdown (7 days from now in Setif time)
     const countdown = document.getElementById("countdown");
-    const endDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000); // 5 days
+
+    // Calculate exact end time in Setif
+    const nowSetif = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Algiers" }));
+    const endDate = new Date(nowSetif.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     function updateCountdown() {
-      const now = new Date();
-      const diff = endDate - now;
+      const currentSetif = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Algiers" }));
+      const diff = endDate - currentSetif;
 
       if (diff <= 0) {
         countdown.textContent = "Registration Closed";
@@ -178,30 +196,6 @@
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-
-    // Send registration to Discord webhook
-    const webhookUrl = "https://discord.com/api/webhooks/1406307633148989471/d7-Gs39h3n6xJSNLko2WSSbKoIFtnqoFKi9HTeN8_YEIgt1h2jhcPIePuEOrzgvr6rHz";
-
-    document.getElementById("registrationForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value;
-      const instagram = document.getElementById("instagram").value;
-
-      fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          content: `📌 New Registration:\n👤 Name: ${name}\n📸 Instagram: @${instagram}`
-        })
-      }).then(() => {
-        alert("Registration submitted! Check your Instagram DMs soon.");
-      }).catch(() => {
-        alert("Error submitting registration.");
-      });
-    });
   </script>
 </body>
 </html>
