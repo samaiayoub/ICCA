@@ -170,16 +170,15 @@
   </div>
 
   <script>
-    // Global countdown (7 days from now in Setif time)
     const countdown = document.getElementById("countdown");
 
-    // Calculate exact end time in Setif
-    const nowSetif = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Algiers" }));
-    const endDate = new Date(nowSetif.getTime() + 7 * 24 * 60 * 60 * 1000);
+    // 🔴 Set fixed global deadline in Setif timezone (UTC+1)
+    // Example: August 23, 2025 at 18:00 Setif time
+    const endDate = new Date("2025-08-23T18:00:00+01:00");
 
     function updateCountdown() {
-      const currentSetif = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Algiers" }));
-      const diff = endDate - currentSetif;
+      const now = new Date();
+      const diff = endDate.getTime() - now.getTime();
 
       if (diff <= 0) {
         countdown.textContent = "Registration Closed";
