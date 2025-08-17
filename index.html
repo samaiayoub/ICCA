@@ -42,6 +42,19 @@
       display: block;
     }
 
+    .player-counter {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 10px 0 30px 0;
+      color: #2ecc71;
+      background: #ecfdf5;
+      border: 2px solid #2ecc71;
+      border-radius: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
     .subtext {
       font-size: 1em;
       color: #555;
@@ -143,6 +156,12 @@
   <div class="overlay">
     <h1>WELCOME, YOU FOUND THE CODE.</h1>
     <div class="countdown" id="countdown">Loading timer...</div>
+
+    <!-- ✅ Players Registered Counter -->
+    <div class="player-counter">
+      Players Registered: 23
+    </div>
+
     <div class="subtext">safe event / when the timer ends registrations are off </div>
     <p>Now to register you have to type your first name, and your Instagram user.<br>
     Example: mohammed (mohammed.23)<br>
@@ -208,7 +227,7 @@
 
       if (!name || !instagram) return;
 
-      const webhookURL = "https://discord.com/api/webhooks/1406307633148989471/d7-Gs39h3n6xJSNLko2WSSbKoIFtnqoFKi9HTeN8_YEIgt1h2jhcPIePuEOrzgvr6rHz";
+      const webhookURL = "YOUR_WEBHOOK_HERE";
 
       const payload = {
         content: `📩 **New Registration**\n👤 Name: ${name}\n📷 Instagram: ${instagram}`
