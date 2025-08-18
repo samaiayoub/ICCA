@@ -205,6 +205,7 @@
   <script>
     const countdown = document.getElementById("countdown");
     const successMessage = document.getElementById("successMessage");
+    const playerCounter = document.querySelector(".player-counter");
 
     // 🔴 Fixed global deadline in Setif timezone (UTC+1)
     const endDate = new Date("2025-08-23T18:00:00+01:00");
@@ -250,6 +251,11 @@
         body: JSON.stringify(payload)
       }).then(() => {
         successMessage.style.display = "block";
+
+        // ✅ Increment player counter
+        let currentCount = parseInt(playerCounter.textContent.replace(/\D/g, ""));
+        currentCount++;
+        playerCounter.textContent = `Players Registered: ${currentCount}`;
       }).catch(() => {
         alert("❌ Error: Could not register. Try again.");
       });
@@ -257,3 +263,4 @@
   </script>
 </body>
 </html>
+
