@@ -171,21 +171,26 @@
     </div>
 
     <div class="subtext">safe event / when the timer ends registrations are off </div>
-    <p>Now to register you have to type your first name, and your Instagram user.<br>
-    Example: mohammed (mohammed.23)<br>
+    <p>Now to register you have to type your first name only.<br>
+    Example: mohammed<br>
     The places in this game are limited, if this page is opened that means there are still some places.</p>
 
     <!-- ⚠️ Discord requirement warning -->
-    <p class="discord-warning">!!!!/ KEEP YOUR DMS OPENED SO YOU CAN GET THE INVITE ON INSTAGRAM, You NEED to have Discord to participate, remember the name you registered with, you will need it later.</p>
+    <p class="discord-warning">⚠️ All the games will start inside our Discord server. After registering, make sure you join using the button below.</p>
 
     <form id="registrationForm">
       <input type="text" id="name" placeholder="First Name" required><br>
-      <input type="text" id="instagram" placeholder="Instagram Username" required><br>
       <button type="submit">Register</button>
       <div class="success-message" id="successMessage">
-        ✅ You have been registered, check your DMs soon.<br>⚠️ Do not register twice or you are out!
+        ✅ You have been registered, check below to join Discord.<br>⚠️ Do not register twice or you are out!
       </div>
     </form>
+
+    <!-- 🔗 Join Discord Button -->
+    <br>
+    <a href="https://discord.gg/enJP8rYA" target="_blank">
+      <button class="details-btn">Join Discord Server</button>
+    </a>
 
     <br>
     <a href="details.html"><button class="details-btn">Details</button></a>
@@ -193,7 +198,7 @@
     <div class="note-box">
       <div class="note-icon">ℹ️</div>
       <div class="note-text">
-        Please read the details before registering. A message will be sent to your Instagram DMs, make sure to have your DMs open, or create a new account just for this, once a link appears in your instagram DMs, thats when you know you were selected to participate
+        Please read the details before registering. Once you register, join the Discord server using the button above. That’s where all the games will begin and all information will be shared.
       </div>
     </div>
 
@@ -235,14 +240,12 @@
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
-      const instagram = document.getElementById("instagram").value.trim();
-
-      if (!name || !instagram) return;
+      if (!name) return;
 
       const webhookURL = "https://discord.com/api/webhooks/1406307633148989471/d7-Gs39h3n6xJSNLko2WSSbKoIFtnqoFKi9HTeN8_YEIgt1h2jhcPIePuEOrzgvr6rHz";
 
       const payload = {
-        content: `📩 **New Registration**\n👤 Name: ${name}\n📷 Instagram: ${instagram}`
+        content: `📩 **New Registration**\n👤 Name: ${name}`
       };
 
       fetch(webhookURL, {
@@ -263,4 +266,3 @@
   </script>
 </body>
 </html>
-
