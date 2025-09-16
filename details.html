@@ -3,116 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Details</title>
+  <title>Event Details - L'CARTA Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f8f9fc;
+      background: #f8f9fa;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
     }
-
     .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    .box {
+      max-width: 800px;
       background: #fff;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .box h2 {
-      text-align: center;
-      font-size: 28px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .requirements {
-      list-style: none;
-      padding: 0;
-    }
-
-    .requirements li {
-      background: #f0f4f8;
-      border-left: 6px solid #4a90e2;
-      margin-bottom: 12px;
-      padding: 14px 18px;
-      font-size: 16px;
-      color: #444;
-      border-radius: 6px;
-    }
-
-    .highlight {
-      font-weight: bold;
-      color: #222;
-    }
-
-    .note-box {
-      margin-top: 30px;
-      background: #fff8e6;
-      border: 2px solid #ffcc80;
-      padding: 20px;
+      margin: 30px;
+      padding: 20px 30px;
       border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #444;
+    }
+    .detail-box {
+      background: #eef3f7;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 12px 0;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .detail-box span {
+      font-weight: bold;
+      margin-right: 6px;
+    }
+    .note {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 6px;
       font-size: 15px;
-      line-height: 1.6;
-      color: #5a4632;
     }
-
-    .note-box h3 {
-      margin-top: 0;
-      color: #d48806;
-      font-size: 18px;
-    }
-
     .back-btn {
       display: block;
-      margin: 30px auto 0;
-      padding: 12px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-      background: #4a90e2;
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
       text-align: center;
-      transition: background 0.3s ease;
+      text-decoration: none;
+      background: #007bff;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.2s;
     }
-
     .back-btn:hover {
-      background: #357abd;
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="box">
-      <h2>📜 Event Participation Details</h2>
-      <ul class="requirements">
-        <li><span class="highlight">📍 Location:</span> You must live in <strong>Sètif</strong> to participate.</li>
-        <li><span class="highlight">🗺️ Outdoor Access:</span> Be able to go out, since some tasks will take place on a <strong>real map (like finding qr codes outside)</strong>.</li>
-        <li><span class="highlight">🏆 Prize:</span> Eventually, a <strong>team will win the money prize</strong> (team size to be announced).</li>
-        <li><span class="highlight">🔞 Age Requirement:</span> Participants must be <strong>15 or older</strong>.</li>
-        <li><span class="highlight">🌐 Online Presence:</span> Stay <strong>connected online</strong> to get notified about <strong>real-time events</strong>.</li>
-      </ul>
+    <h2>📜 Event Participation Details</h2>
 
-      <div class="note-box">
-        <h3>⚠️ Important Note</h3>
-        <p>
-          Please make sure you meet all the requirements listed above before registering.  
-          This ensures fair play and smooth participation throughout the event.  
-          Additional details and announcements will be shared directly with registered participants.
-        </p>
-      </div>
-
-      <a href="index.html" class="back-btn">⬅️ Back to Registration Page</a>
+    <div class="detail-box">
+      <span>🌍 Online Only:</span> The entire game will be hosted online. You only need a stable internet connection to play.
     </div>
+
+    <div class="detail-box">
+      <span>🎮 Mini-Games:</span> The event consists of multiple elimination mini-games. Players advance by surviving each round.
+    </div>
+
+    <div class="detail-box">
+      <span>🏆 Prize:</span> The winner(s) will receive the final prize (to be announced).
+    </div>
+
+    <div class="detail-box">
+      <span>🔞 Age Requirement:</span> Participants must be 15 or older.
+    </div>
+
+    <div class="detail-box">
+      <span>💬 Communication:</span> All rounds and announcements will be managed through our official Discord server. Joining it is mandatory.
+    </div>
+
+    <div class="detail-box">
+      <span>⏱️ Real-Time Play:</span> Games will be played live. Make sure to be present at the announced times — missing a game means elimination.
+    </div>
+
+    <div class="note">
+      ⚠️ <strong>Important Note:</strong><br>
+      Please ensure you meet all the requirements above before registering. The game is fully online, and missing rounds or failing to follow instructions will lead to disqualification. Stay active on Discord for announcements.
+    </div>
+
+    <a href="index.html" class="back-btn">⬅ Back to Registration Page</a>
   </div>
 </body>
 </html>
